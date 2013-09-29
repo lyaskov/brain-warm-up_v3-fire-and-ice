@@ -1,11 +1,11 @@
 <?php
 
-namespace YourGitHubLogin;
+namespace lyaskov;
 
 /**
  * Class Solomon
  *
- * @package YourGitHubLogin
+ * @package lyaskov
  */
 class SolomonTest extends \BaseTest
 {

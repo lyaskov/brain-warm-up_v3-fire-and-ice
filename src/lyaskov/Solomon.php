@@ -39,10 +39,11 @@ $this->mas_ice = array();
 
         while ($this->isDemons()) {
             $posLeft = $this->getMaxLeft() + 1;
-            $posRight = $this->getMaxRight() + 1;
-            if (($posRight - $posLeft) >= 3){
-                $posRight = $posLeft;
-            }
+            //$posRight = $this->getMaxRight() + 1;
+            $posRight = $this->getMaxMaxLeft($posLeft-1) + 1;
+            //if (($posRight - $posLeft) >= 3){
+              //  $posRight = $posLeft;
+            //}
             $this->magGoTo($posRight - 1);
             $this->stickIce();
             $this->magGoTo($posLeft - 2);
@@ -88,6 +89,11 @@ $v2 = $this->getAction();
             return null;
         }
         return $this->mas_ice[$position];
+    }
+
+    public function getDemonsPos($position = 0)
+    {
+        return $this->mas_demons[$position];
     }
 
     public function setIcePosition($position, $type)
@@ -237,6 +243,29 @@ $v2 = $this->getAction();
         return $this->getIndexMaxRight();
     }
 
+    public function getMaxMaxLeft($posLeft){
+
+        $count = $this->getCountDemons();
+        if ($posLeft==$count) $posLeft--;
+        $max = $this->mas_demons[$posLeft];
+        $this->setIndexMaxLeft($posLeft);
+        $count0 = 0;
+        for ($i = $posLeft+1; $i < $count; $i++) {
+            if ($this->getDemonsPos($i) == 0){
+                $count0++;
+            }
+            else{
+                $count0=0;
+            }
+            if ($count0>=3) break;
+            if ($max <= $this->mas_demons[$i]) {
+                $max = $this->mas_demons[$i];
+                $this->setIndexMaxLeft($i);
+            }
+        }
+        return $this->getIndexMaxLeft();
+    }
+
     public function magGoTo($position = -1)
     {
         //Идем в право
@@ -264,8 +293,12 @@ $v2 = $this->getAction();
 }
 
 //$demons = array(1, 1);
+
+//$demons = explode(" ", '2 0 0 0 0 0 0 1 0 0 0 0 0 1 1 0 0 1 0 1');
 //
 //$ob = new Solomon();
+
+//$ob->fight($demons);
 //
 //while ($ob->isDemons()) {
 //    $posLeft = $ob->getMaxLeft() + 1;

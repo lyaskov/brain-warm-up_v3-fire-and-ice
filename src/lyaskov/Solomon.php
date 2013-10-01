@@ -7,26 +7,26 @@ class Solomon
     public function fight($demons)
     {
         $p = $demons;
-
-        //$this->setDemons($demons);
-        $this->setDemons($p);
-        $count = $this->getCountDemons();
-        for ($i = 0; $i <= $count; $i++) {
-            $this->mas_ice[] = 0;
-        }
-
-        while ($this->isDemons()) {
-            $posLeft = $this->getMaxLeft() + 1;
-            $posRight = $this->getMaxRight() + 1;
-//            if (($posRight - $posLeft) >= 3){
-//                $posRight = $posLeft;
-//            }
-            $this->magGoTo($posRight - 1);
-            $this->stickIce();
-            $this->magGoTo($posLeft - 2);
-            $this->stickIce();
-        }
-$v1 = $this->getAction();
+//
+//        //$this->setDemons($demons);
+//        $this->setDemons($p);
+//        $count = $this->getCountDemons();
+//        for ($i = 0; $i <= $count; $i++) {
+//            $this->mas_ice[] = 0;
+//        }
+//
+//        while ($this->isDemons()) {
+//            $posLeft = $this->getMaxLeft() + 1;
+//            $posRight = $this->getMaxRight() + 1;
+////            if (($posRight - $posLeft) >= 3){
+////                $posRight = $posLeft;
+////            }
+//            $this->magGoTo($posRight - 1);
+//            $this->stickIce();
+//            $this->magGoTo($posLeft - 2);
+//            $this->stickIce();
+//        }
+//$v1 = $this->getAction();
 
 $this->setAction("");
 $this->setPositionMag(-1);
@@ -38,23 +38,27 @@ $this->mas_ice = array();
         }
 
         while ($this->isDemons()) {
-            $posLeft = $this->getMaxLeft() + 1;
-            //$posRight = $this->getMaxRight() + 1;
+            //$posLeft = $this->getMaxLeft() + 1;
+            $max = $this->getMaxLeft() + 1;
+            $posLeft = $this->getPositionFirstDemon()+1;
             $posRight = $this->getMaxMaxLeft($posLeft-1) + 1;
             //if (($posRight - $posLeft) >= 3){
               //  $posRight = $posLeft;
             //}
             $this->magGoTo($posRight - 1);
             $this->stickIce();
+            if (($this->getPositionMag()-($max-1))>=0){
+                $posLeft = $max;
+            }
             $this->magGoTo($posLeft - 2);
             $this->stickIce();
         }
 $v2 = $this->getAction();
 
-        if (mb_strlen($v2)<mb_strlen($v1))
+       // if (mb_strlen($v2)>mb_strlen($v1))
+       //     return $v1;
+       // else
             return $v2;
-        else
-            return $v1;
         //return $this->getAction();
     }
 
@@ -82,6 +86,16 @@ $v2 = $this->getAction();
 ////            $this->mas_ice[] = 0;
 ////        }
 //    }
+
+    public function getPositionFirstDemon(){
+        $count = $this->getCountDemons();
+        for($i=0;$count-1;$i++){
+            if ($this->getDemonsPos($i)){
+                return $i;
+            }
+        }
+        return null;
+    }
 
     public function getIcePosition($position = 0)
     {
@@ -248,10 +262,11 @@ $v2 = $this->getAction();
         $count = $this->getCountDemons();
         if ($posLeft==$count) $posLeft--;
         $max = $this->mas_demons[$posLeft];
+        $demonsLeft = $this->getDemonsPos($posLeft);
         $this->setIndexMaxLeft($posLeft);
         $count0 = 0;
         for ($i = $posLeft+1; $i < $count; $i++) {
-            if ($this->getDemonsPos($i) == 0){
+            if (($this->getDemonsPos($i) - $demonsLeft) < 0){
                 $count0++;
             }
             else{
@@ -294,7 +309,7 @@ $v2 = $this->getAction();
 
 //$demons = array(1, 1);
 
-//$demons = explode(" ", '2 0 0 0 0 0 0 1 0 0 0 0 0 1 1 0 0 1 0 1');
+//$demons = explode(" ", '3 1 2 2 4');
 //
 //$ob = new Solomon();
 
